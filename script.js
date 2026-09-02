@@ -59,18 +59,8 @@ function applyConfig() {
 
     // STATUS
     const status = document.getElementById("status");
-    const statusText = document.getElementById("statusText");
 
-    status.classList.remove("offline");
-
-    if (config.profile.online === true) {
-        status.style.display = "inline-flex";
-        statusText.textContent = "Online";
-    } else {
-        status.style.display = "inline-flex";
-        status.classList.add("offline");
-        statusText.textContent = "Offline";
-    }
+    status.style.display = "none";
 
 
     // SOCIALS
