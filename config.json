@@ -50,7 +50,7 @@
         },
 
         {
-            "enabled": true,
+            "enabled": false,
             "name": "TikTok",
             "description": "Short Content",
             "preview": "Kurze Videos und Clips.",
@@ -59,7 +59,7 @@
         },
 
         {
-            "enabled": true,
+            "enabled": false,
             "name": "Instagram",
             "description": "Photos & Updates",
             "preview": "Updates und Bilder.",
