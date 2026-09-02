@@ -56,13 +56,7 @@ function applyConfig() {
     document.getElementById("profileImage").src =
         config.profile.image;
 
-
-    // STATUS
-    const status = document.getElementById("status");
-
-    status.style.display = "none";
-
-
+    
     // SOCIALS
     createSocials();
 
