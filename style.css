@@ -1,0 +1,250 @@
+:root {
+  --bg: #000;
+  --card: #050505;
+  --row: #0d0d0d;
+  --border: #262626;
+  --accent: #fff;
+  --muted: #8a8a8a;
+  --card-max: 420px;
+  --card-radius: 22px;
+  --font-heading: "Unbounded";
+  --font-body: "Space Grotesk";
+  --font-mono: "JetBrains Mono";
+}
+
+[hidden] { display: none !important; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); }
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 16px;
+  background: var(--bg);
+  color: var(--accent);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ---------- Card ---------- */
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--card-max);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 28px 20px;
+}
+
+/* ---------- Profil ---------- */
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.avatar {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 8px;
+}
+
+.ring {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#avatarFallback {
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 700;
+  font-size: 46px;
+  line-height: 1;
+}
+
+.dot {
+  display: inline-block;
+  border-radius: 50%;
+  background: #747f8d;
+}
+
+.avatar .dot {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 22px;
+  height: 22px;
+  border: 4px solid var(--card);
+}
+
+h1 {
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  word-break: break-word;
+}
+
+#bio {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  margin-top: 8px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+}
+
+.status .dot { width: 8px; height: 8px; flex: none; }
+
+.status span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- Socials ---------- */
+#socials {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.social {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  background: var(--row);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.15s ease-out;
+}
+
+.social:hover { border-color: var(--accent); }
+
+.social::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.12), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .social:hover::before { opacity: 1; }
+}
+
+.no-glow .social::before { display: none; }
+
+.icon {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 700;
+}
+
+.icon img { width: 22px; height: 22px; display: block; }
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.text strong {
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.text small {
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arrow {
+  color: #555;
+  font-size: 1.1rem;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.social:hover .arrow {
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+
+/* ---------- Footer ---------- */
+footer {
+  margin-top: 28px;
+  text-align: center;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: #666;
+}
+
+/* ---------- Animationen ---------- */
+.fade .profile { animation: rise 0.6s ease backwards; }
+.fade .social  { animation: rise 0.5s ease backwards; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
