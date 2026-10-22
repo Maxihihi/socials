@@ -5,7 +5,7 @@ const CONFIG = {
   // "custom" ist auch der Ersatz, falls Lanyard nicht erreichbar ist.
   name:   { source: "discord", custom: "maxihihi" },
   avatar: { source: "discord", custom: "" },   // Bild-URL, leer = großes Buchstaben-Icon
-  bio: "Minecraft / Plugins / Bots",
+  bio: "Minecraft / Plugins / socials",
   footer: "@2026 maxihihi",
 
   // ---------- Discord-Status (Lanyard) ----------
@@ -54,7 +54,7 @@ const CONFIG = {
     { enabled: true,  name: "YouTube",    description: "Videos ansehen",    url: "https://youtube.com/@maxi-hihi",          icon: "youtube" },
     { enabled: true,  name: "Discord",    description: "Server beitreten",  url: "https://discord.gg/xpDmz6KWqx",           icon: "discord" },
     { enabled: true,  name: "Cat-Craft",  description: "Community-Server",  url: "https://dsc.gg/cat-craft",                 icon: "discord" },
-    { enabled: true,  name: "WhatsApp",   description: "Channel folgen",    url: "https://whatsapp.com/channel/maxihihi", icon: "whatsapp" },
+    { enabled: true,  name: "WhatsApp",   description: "Channel folgen",    url: "https://whatsapp.com/channel/0029Vb8oEGsK0IBhPS21Yu1L", icon: "whatsapp" },
     { enabled: true,  name: "GitHub",     description: "Projekte ansehen",  url: "https://github.com/maxihihi",              icon: "github" },
     { enabled: true,  name: "SoundCloud", description: "Musik anhören",     url: "https://soundcloud.com/maxihihi",         icon: "soundcloud" },
     { enabled: false, name: "Instagram",  description: "Fotos ansehen",     url: "https://instagram.com/DEIN_NAME",          icon: "instagram" },
