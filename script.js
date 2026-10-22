@@ -1,379 +1,284 @@
-let config = null;
+(function () {
+  "use strict";
 
-// ========================================
-// CONFIG LADEN
-// ========================================
+  var $ = function (s) { return document.querySelector(s); };
+  var root = document.documentElement;
 
-async function loadConfig() {
-    try {
-        const response = await fetch("./config.json?cache=" + Date.now());
+  var STATUS = {
+    online:  ["Online", "#3ddc84"],
+    idle:    ["Abwesend", "#faa61a"],
+    dnd:     ["Bitte nicht stören", "#f04747"],
+    offline: ["Offline", "#747f8d"]
+  };
 
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
+  /* ---------- Theme + Fonts ---------- */
+  function applyTheme() {
+    var t = CONFIG.theme || {};
+    var f = CONFIG.fonts || {};
+    var map = {
+      "--bg": t.background, "--card": t.card, "--row": t.row,
+      "--border": t.border, "--accent": t.accent, "--muted": t.muted,
+      "--card-max": t.cardMaxWidth, "--card-radius": t.cardRadius
+    };
+    Object.keys(map).forEach(function (k) {
+      if (map[k]) root.style.setProperty(k, map[k]);
+    });
+    if (f.heading) root.style.setProperty("--font-heading", '"' + f.heading + '"');
+    if (f.body)    root.style.setProperty("--font-body", '"' + f.body + '"');
+    if (f.mono)    root.style.setProperty("--font-mono", '"' + f.mono + '"');
+
+    var theme = document.querySelector('meta[name="theme-color"]');
+    if (theme && t.background) theme.setAttribute("content", t.background);
+  }
+
+  function loadFonts() {
+    var f = CONFIG.fonts || {};
+    var names = [f.heading, f.body, f.mono].filter(Boolean);
+    var uniq = names.filter(function (n, i) { return names.indexOf(n) === i; });
+    if (!uniq.length) return;
+    var q = uniq.map(function (n) {
+      return "family=" + encodeURIComponent(n).replace(/%20/g, "+") + ":wght@400;500;700";
+    }).join("&");
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?" + q + "&display=swap";
+    document.head.appendChild(link);
+  }
+
+  /* ---------- Profil ---------- */
+  var img = $("#avatarImg");
+  var fb = $("#avatarFallback");
+
+  img.onload = function () { img.hidden = false; fb.hidden = true; };
+  img.onerror = function () { img.hidden = true; fb.hidden = false; };
+
+  function setAvatar(url) {
+    if (!url) { img.hidden = true; fb.hidden = false; return; }
+    if (img.dataset.src !== url) {
+      img.dataset.src = url;
+      img.src = url;
+    }
+  }
+
+  function setName(name) {
+    $("#name").textContent = name;
+    fb.textContent = (name || "?").charAt(0).toUpperCase();
+    document.title = name;
+  }
+
+  function discordAvatar(u) {
+    if (!u || !u.avatar) return "";
+    var ext = u.avatar.indexOf("a_") === 0 ? "gif" : "png";
+    return "https://cdn.discordapp.com/avatars/" + u.id + "/" + u.avatar + "." + ext + "?size=256";
+  }
+
+  /* ---------- Socials ---------- */
+  function renderSocials() {
+    var list = $("#socials");
+    list.innerHTML = "";
+    var i = 0;
+    (CONFIG.socials || []).forEach(function (s) {
+      if (s.enabled === false) return;
+      if (!/^https?:\/\//i.test(s.url || "")) return;
+
+      var a = document.createElement("a");
+      a.className = "social";
+      a.href = s.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.style.animationDelay = (i * 70) + "ms";
+      i++;
+
+      var ic = document.createElement("span");
+      ic.className = "icon";
+      var im = document.createElement("img");
+      im.alt = "";
+      im.loading = "lazy";
+      im.src = s.iconUrl || ("https://cdn.simpleicons.org/" + encodeURIComponent(s.icon || s.name.toLowerCase()) + "/ffffff");
+      im.onerror = function () { im.remove(); ic.textContent = (s.name || "?").charAt(0); };
+      ic.appendChild(im);
+
+      var txt = document.createElement("span");
+      txt.className = "text";
+      var n = document.createElement("strong");
+      n.textContent = s.name || "";
+      var d = document.createElement("small");
+      d.textContent = s.description || "";
+      txt.appendChild(n);
+      txt.appendChild(d);
+
+      var ar = document.createElement("span");
+      ar.className = "arrow";
+      ar.textContent = "↗";
+
+      a.appendChild(ic);
+      a.appendChild(txt);
+      a.appendChild(ar);
+      list.appendChild(a);
+    });
+  }
+
+  /* ---------- Lanyard (Discord-Status) ---------- */
+  function activityText(d) {
+    if (d.listening_to_spotify && d.spotify) return "hört " + d.spotify.song;
+    var acts = (d.activities || []).filter(function (a) { return a.type !== 4; });
+    var a = acts[0];
+    if (!a) return "";
+    switch (a.type) {
+      case 0: return "spielt " + a.name;
+      case 1: return "streamt " + (a.details || a.name);
+      case 2: return "hört " + a.name;
+      case 3: return "schaut " + a.name;
+      case 5: return "kämpft in " + a.name;
+      default: return a.name;
+    }
+  }
+
+  function showStatus(d) {
+    var L = CONFIG.lanyard || {};
+    var s = STATUS[d.discord_status] || STATUS.offline;
+    var act = L.showActivity !== false ? activityText(d) : "";
+    $("#statusText").textContent = s[0] + (act ? " · " + act : "");
+    $("#statusDot").style.background = s[1];
+    $("#avatarDot").style.background = s[1];
+    $("#avatarDot").hidden = false;
+    $("#status").hidden = false;
+  }
+
+  function fetchLanyard() {
+    var L = CONFIG.lanyard || {};
+    var id = CONFIG.discordId || "";
+    if (!L.enabled || !/^\d+$/.test(id)) return;
+
+    fetch("https://api.lanyard.rest/v1/users/" + id, { cache: "no-store" })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (!j.success) throw new Error("Lanyard: " + (j.error && j.error.message));
+        var d = j.data;
+        var u = d.discord_user;
+
+        if ((CONFIG.name || {}).source === "discord") {
+          setName(u.global_name || u.username);
         }
-
-        config = await response.json();
-
-        console.log("✅ Config geladen:", config);
-
-        applyConfig();
-
-    } catch (error) {
-        console.error("❌ Config konnte nicht geladen werden:", error);
-
-        document.getElementById("socials").innerHTML = `
-            <div class="error">
-                Config konnte nicht geladen werden.
-            </div>
-        `;
-    }
-}
-
-
-// ========================================
-// CONFIG ANWENDEN
-// ========================================
-
-function applyConfig() {
-
-    // SITE
-    document.title = config.site.title;
-
-    document.getElementById("name").textContent =
-        config.site.name;
-
-    document.getElementById("subtitle").textContent =
-        config.site.subtitle;
-
-    document.getElementById("description").textContent =
-        config.site.description;
-
-    document.getElementById("footerText").textContent =
-        `© ${config.site.year} • Made by ${config.site.name}`;
-
-
-    // PROFILE
-    document.getElementById("profileImage").src =
-        config.profile.image;
-
-    
-    // SOCIALS
-    createSocials();
-
-
-    // EFFECTS
-    if (config.effects.rain === true) {
-        startRain();
-    }
-
-    if (config.effects.mouseGlow === true) {
-        startMouseGlow();
-    }
-
-    if (config.effects.card3D === true) {
-        startCard3D();
-    }
-
-    if (config.effects.cardFloat === true) {
-        document
-            .getElementById("card")
-            .classList.add("floating");
-    }
-
-    if (config.effects.hoverPreview === true) {
-        startHoverPreview();
-    }
-}
-
-
-// ========================================
-// SOCIAL BUTTONS
-// ========================================
-
-function createSocials() {
-
-    const container =
-        document.getElementById("socials");
-
-    container.innerHTML = "";
-
-    if (!Array.isArray(config.socials)) {
-        console.error("❌ config.socials ist keine Liste.");
-        return;
-    }
-
-    config.socials.forEach((social, index) => {
-
-        // enabled: false = ausblenden
-        if (social.enabled !== true) {
-            return;
+        if ((CONFIG.avatar || {}).source === "discord") {
+          setAvatar(discordAvatar(u) || (CONFIG.avatar || {}).custom || "");
         }
-
-        const link =
-            document.createElement("a");
-
-        link.className = "social";
-
-        link.href = social.url;
-
-        link.target = "_blank";
-
-        link.rel = "noopener noreferrer";
-
-        link.style.animationDelay =
-            `${index * 0.07}s`;
-
-
-        link.innerHTML = `
-            <div class="socialIcon">
-                <i class="${escapeHTML(social.icon)}"></i>
-            </div>
-
-            <div class="socialText">
-                <strong>
-                    ${escapeHTML(social.name)}
-                </strong>
-
-                <span>
-                    ${escapeHTML(social.description)}
-                </span>
-            </div>
-
-            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
-        `;
-
-
-        link.dataset.name =
-            social.name || "";
-
-        link.dataset.description =
-            social.description || "";
-
-        link.dataset.preview =
-            social.preview || "";
-
-        link.dataset.icon =
-            social.icon || "";
-
-
-        container.appendChild(link);
-    });
-}
-
-
-// ========================================
-// HTML SICHERN
-// ========================================
-
-function escapeHTML(text) {
-
-    return String(text ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
-
-
-// ========================================
-// RAIN
-// ========================================
-
-function startRain() {
-
-    const rain =
-        document.getElementById("rain");
-
-    rain.innerHTML = "";
-
-    for (let i = 0; i < 90; i++) {
-
-        const drop =
-            document.createElement("div");
-
-        drop.className = "rainDrop";
-
-        drop.style.left =
-            Math.random() * 100 + "%";
-
-        drop.style.height =
-            20 + Math.random() * 35 + "px";
-
-        drop.style.opacity =
-            0.1 + Math.random() * 0.45;
-
-        drop.style.animationDuration =
-            0.7 + Math.random() * 1.4 + "s";
-
-        drop.style.animationDelay =
-            Math.random() * 2 + "s";
-
-        rain.appendChild(drop);
-    }
-}
-
-
-// ========================================
-// MOUSE GLOW
-// ========================================
-
-function startMouseGlow() {
-
-    const glow =
-        document.getElementById("mouseGlow");
-
-    document.addEventListener("mousemove", event => {
-
-        glow.style.left =
-            `${event.clientX}px`;
-
-        glow.style.top =
-            `${event.clientY}px`;
-    });
-}
-
-
-// ========================================
-// 3D CARD
-// ========================================
-
-function startCard3D() {
-
-    const card =
-        document.getElementById("card");
-
-    card.addEventListener("mousemove", event => {
-
-        const rect =
-            card.getBoundingClientRect();
-
-        const x =
-            event.clientX - rect.left;
-
-        const y =
-            event.clientY - rect.top;
-
-        const rotateY =
-            ((x / rect.width) - 0.5) * 9;
-
-        const rotateX =
-            ((y / rect.height) - 0.5) * -9;
-
-        card.style.transform = `
-            perspective(1000px)
-            rotateX(${rotateX}deg)
-            rotateY(${rotateY}deg)
-            translateY(-5px)
-        `;
-    });
-
-
-    card.addEventListener("mouseleave", () => {
-
-        card.style.transform = `
-            perspective(1000px)
-            rotateX(0deg)
-            rotateY(0deg)
-            translateY(0)
-        `;
-    });
-}
-
-
-// ========================================
-// HOVER PREVIEW
-// ========================================
-
-function startHoverPreview() {
-
-    const preview =
-        document.getElementById("hoverPreview");
-
-    const title =
-        document.getElementById("previewTitle");
-
-    const description =
-        document.getElementById("previewDescription");
-
-    const text =
-        document.getElementById("previewText");
-
-    const icon =
-        document.getElementById("previewIcon");
-
-
-    document
-        .querySelectorAll(".social")
-        .forEach(button => {
-
-            button.addEventListener("mouseenter", () => {
-
-                title.textContent =
-                    button.dataset.name;
-
-                description.textContent =
-                    button.dataset.description;
-
-                text.textContent =
-                    button.dataset.preview;
-
-                icon.className =
-                    button.dataset.icon;
-
-                preview.classList.add("visible");
-            });
-
-
-            button.addEventListener("mouseleave", () => {
-
-                preview.classList.remove("visible");
-            });
+        showStatus(d);
+      })
+      .catch(function (e) { console.warn(e); });
+  }
+
+  /* ---------- Partikel ---------- */
+  function particles() {
+    var E = CONFIG.effects || {};
+    var cv = $("#bg");
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!E.particles || reduce) { cv.remove(); return; }
+
+    var ctx = cv.getContext("2d");
+    var w, h, dpr, ps = [];
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = window.innerWidth;
+      h = window.innerHeight;
+      cv.width = w * dpr;
+      cv.height = h * dpr;
+      cv.style.width = w + "px";
+      cv.style.height = h + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var n = (E.particleCount || 60) * (w < 600 ? 0.6 : 1);
+      ps = [];
+      for (var i = 0; i < n; i++) {
+        ps.push({
+          x: Math.random() * w, y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
+          r: Math.random() * 1.4 + 0.4
         });
+      }
+    }
 
+    function frame() {
+      ctx.clearRect(0, 0, w, h);
+      for (var i = 0; i < ps.length; i++) {
+        var p = ps[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
 
-    document.addEventListener("mousemove", event => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.fill();
 
-        if (!preview.classList.contains("visible")) {
-            return;
+        for (var j = i + 1; j < ps.length; j++) {
+          var q = ps[j];
+          var dx = p.x - q.x, dy = p.y - q.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 110) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.strokeStyle = "rgba(255,255,255," + (0.12 * (1 - dist / 110)) + ")";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
         }
+      }
+      requestAnimationFrame(frame);
+    }
 
-        let x =
-            event.clientX + 20;
+    resize();
+    window.addEventListener("resize", resize);
+    frame();
+  }
 
-        let y =
-            event.clientY + 20;
+  /* ---------- Tilt + Glow ---------- */
+  function interactions() {
+    var E = CONFIG.effects || {};
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
-
-        const width =
-            preview.offsetWidth;
-
-        const height =
-            preview.offsetHeight;
-
-
-        if (x + width > window.innerWidth) {
-            x =
-                event.clientX - width - 20;
+    document.querySelectorAll(".social").forEach(function (el) {
+      el.addEventListener("mousemove", function (e) {
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width;
+        var y = (e.clientY - r.top) / r.height;
+        if (E.glow) {
+          el.style.setProperty("--mx", (x * 100) + "%");
+          el.style.setProperty("--my", (y * 100) + "%");
         }
-
-        if (y + height > window.innerHeight) {
-            y =
-                event.clientY - height - 20;
+        if (E.tilt) {
+          el.style.transform =
+            "perspective(700px) rotateX(" + ((0.5 - y) * 8) + "deg) rotateY(" + ((x - 0.5) * 8) + "deg) translateY(-2px)";
         }
-
-
-        preview.style.left =
-            `${x}px`;
-
-        preview.style.top =
-            `${y}px`;
+      });
+      el.addEventListener("mouseleave", function () { el.style.transform = ""; });
     });
-}
+  }
 
+  /* ---------- Start ---------- */
+  function init() {
+    var E = CONFIG.effects || {};
+    applyTheme();
+    loadFonts();
 
-// ========================================
-// START
-// ========================================
+    document.body.classList.toggle("fade", !!E.fadeIn);
+    document.body.classList.toggle("no-glow", !E.glow);
 
-loadConfig();
+    $("#bio").textContent = CONFIG.bio || "";
+    $("#footer").textContent = CONFIG.footer || "";
+
+    setName((CONFIG.name || {}).custom || "maxihihi");
+    setAvatar((CONFIG.avatar || {}).custom || "");
+
+    renderSocials();
+    interactions();
+    particles();
+
+    fetchLanyard();
+    var L = CONFIG.lanyard || {};
+    if (L.enabled) setInterval(fetchLanyard, Math.max(5, L.refreshSeconds || 15) * 1000);
+  }
+
+  init();
+})();
