@@ -1,86 +1,63 @@
-{
-    "site": {
-        "name": "Maxihihi",
-        "title": "Maxihihi • Socials",
-        "subtitle": "Developer • Gamer • Creator",
-        "description": "Willkommen auf meiner kleinen Ecke im Internet. 🎉",
-        "year": 2026
-    },
+const CONFIG = {
+  // ---------- Profil ----------
+  // source: "discord" = Name/Bild kommen von deinem Discord-Profil (Lanyard)
+  //         "custom"  = es wird immer der Wert aus "custom" benutzt
+  // "custom" ist auch der Ersatz, falls Lanyard nicht erreichbar ist.
+  name:   { source: "discord", custom: "maxihihi" },
+  avatar: { source: "discord", custom: "" },   // Bild-URL, leer = großes Buchstaben-Icon
+  bio: "Minecraft / Plugins / Bots",
+  footer: "@2026 maxihihi",
 
-    "profile": {
-        "image": "maxihihi-logo-001.png"
-    },
+  // ---------- Discord-Status (Lanyard) ----------
+  discordId: "DEINE_DISCORD_ID",   // Zahlen-ID deines Discord-Accounts
+  lanyard: {
+    enabled: true,
+    showActivity: true,            // zeigt "spielt ...", "hört ..." usw.
+    refreshSeconds: 15             // wie oft der Status neu geholt wird
+  },
 
-    "effects": {
-        "rain": true,
-        "mouseGlow": true,
-        "card3D": true,
-        "cardFloat": true,
-        "hoverPreview": true
-    },
+  // ---------- Look ----------
+  theme: {
+    background: "#000000",
+    card: "#050505",
+    row: "#0d0d0d",
+    border: "#262626",
+    accent: "#ffffff",
+    muted: "#8a8a8a",
+    cardMaxWidth: "420px",
+    cardRadius: "22px"
+  },
 
-    "socials": [
-        {
-            "enabled": true,
-            "name": "Discord",
-            "description": "Join my community",
-            "preview": "Komm auf meinen Discord-Server.",
-            "url": "https://discord.gg/xpDmz6KWqx",
-            "icon": "fab fa-discord"
-        },
+  // Google-Fonts-Namen (einfach austauschbar)
+  fonts: {
+    heading: "Unbounded",
+    body: "Space Grotesk",
+    mono: "JetBrains Mono"
+  },
 
-        {
-            "enabled": true,
-            "name": "YouTube",
-            "description": "Videos & Content",
-            "preview": "Meine Videos und zukünftiger Content.",
-            "url": "https://youtube.com/@maxi-hihi",
-            "icon": "fab fa-youtube"
-        },
+  // ---------- Effekte (je an/aus) ----------
+  effects: {
+    particles: true,
+    particleCount: 60,
+    tilt: true,
+    glow: true,
+    fadeIn: true
+  },
 
-        {
-            "enabled": true,
-            "name": "Twitch",
-            "description": "Live Streams",
-            "preview": "Meine Livestreams auf Twitch.",
-            "url": "https://twitch.tv/maxihihi2402",
-            "icon": "fab fa-twitch"
-        },
-
-        {
-            "enabled": false,
-            "name": "TikTok",
-            "description": "Short Content",
-            "preview": "Kurze Videos und Clips.",
-            "url": "https://tiktok.com/@Maxihihi",
-            "icon": "fab fa-tiktok"
-        },
-
-        {
-            "enabled": false,
-            "name": "Instagram",
-            "description": "Photos & Updates",
-            "preview": "Updates und Bilder.",
-            "url": "https://instagram.com/Maxihihi",
-            "icon": "fab fa-instagram"
-        },
-
-        {
-            "enabled": true,
-            "name": "Cat-Craft",
-            "description": "Minecraft Server",
-            "preview": "Mein Minecraft Server.",
-            "url": "https://dsc.gg/cat-craft",
-            "icon": "fa-solid fa-cube"
-        },
-
-        {
-            "enabled": true,
-            "name": "GitHub",
-            "description": "My Projects",
-            "preview": "Meine Projekte und mein Code.",
-            "url": "https://github.com/Maxihihi",
-            "icon": "fab fa-github"
-        }
-    ]
-}
+  // ---------- Socials ----------
+  // enabled: true/false  ->  Social ein- oder ausblenden
+  // icon: Name auf simpleicons.org (z. B. "youtube", "tiktok", "instagram")
+  // iconUrl: optional, eigenes Logo (überschreibt "icon")
+  // Reihenfolge hier = Reihenfolge auf der Seite
+  socials: [
+    { enabled: true,  name: "Twitch",     description: "Streams ansehen",   url: "https://twitch.tv/DEIN_NAME",              icon: "twitch" },
+    { enabled: true,  name: "YouTube",    description: "Videos ansehen",    url: "https://youtube.com/@DEIN_KANAL",          icon: "youtube" },
+    { enabled: true,  name: "Discord",    description: "Server beitreten",  url: "https://discord.gg/DEIN_INVITE",           icon: "discord" },
+    { enabled: true,  name: "Cat-Craft",  description: "Community-Server",  url: "https://dsc.gg/cat-craft",                 icon: "discord" },
+    { enabled: true,  name: "WhatsApp",   description: "Channel folgen",    url: "https://whatsapp.com/channel/DEIN_CHANNEL", icon: "whatsapp" },
+    { enabled: true,  name: "GitHub",     description: "Projekte ansehen",  url: "https://github.com/maxihihi",              icon: "github" },
+    { enabled: true,  name: "SoundCloud", description: "Musik anhören",     url: "https://soundcloud.com/DEIN_NAME",         icon: "soundcloud" },
+    { enabled: false, name: "Instagram",  description: "Fotos ansehen",     url: "https://instagram.com/DEIN_NAME",          icon: "instagram" },
+    { enabled: false, name: "TikTok",     description: "Clips ansehen",     url: "https://tiktok.com/@DEIN_NAME",            icon: "tiktok" }
+  ]
+};
