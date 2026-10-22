@@ -9,7 +9,7 @@ const CONFIG = {
   footer: "@2026 maxihihi",
 
   // ---------- Discord-Status (Lanyard) ----------
-  discordId: "DEINE_DISCORD_ID",   // Zahlen-ID deines Discord-Accounts
+  discordId: "1479924807167508661",   // Zahlen-ID deines Discord-Accounts
   lanyard: {
     enabled: true,
     showActivity: true,            // zeigt "spielt ...", "hört ..." usw.
@@ -50,13 +50,13 @@ const CONFIG = {
   // iconUrl: optional, eigenes Logo (überschreibt "icon")
   // Reihenfolge hier = Reihenfolge auf der Seite
   socials: [
-    { enabled: true,  name: "Twitch",     description: "Streams ansehen",   url: "https://twitch.tv/DEIN_NAME",              icon: "twitch" },
-    { enabled: true,  name: "YouTube",    description: "Videos ansehen",    url: "https://youtube.com/@DEIN_KANAL",          icon: "youtube" },
-    { enabled: true,  name: "Discord",    description: "Server beitreten",  url: "https://discord.gg/DEIN_INVITE",           icon: "discord" },
+    { enabled: true,  name: "Twitch",     description: "Streams ansehen",   url: "https://twitch.tv/maxihihi2402",              icon: "twitch" },
+    { enabled: true,  name: "YouTube",    description: "Videos ansehen",    url: "https://youtube.com/@maxi-hihi",          icon: "youtube" },
+    { enabled: true,  name: "Discord",    description: "Server beitreten",  url: "https://discord.gg/xpDmz6KWqx",           icon: "discord" },
     { enabled: true,  name: "Cat-Craft",  description: "Community-Server",  url: "https://dsc.gg/cat-craft",                 icon: "discord" },
-    { enabled: true,  name: "WhatsApp",   description: "Channel folgen",    url: "https://whatsapp.com/channel/DEIN_CHANNEL", icon: "whatsapp" },
+    { enabled: true,  name: "WhatsApp",   description: "Channel folgen",    url: "https://whatsapp.com/channel/maxihihi", icon: "whatsapp" },
     { enabled: true,  name: "GitHub",     description: "Projekte ansehen",  url: "https://github.com/maxihihi",              icon: "github" },
-    { enabled: true,  name: "SoundCloud", description: "Musik anhören",     url: "https://soundcloud.com/DEIN_NAME",         icon: "soundcloud" },
+    { enabled: true,  name: "SoundCloud", description: "Musik anhören",     url: "https://soundcloud.com/maxihihi",         icon: "soundcloud" },
     { enabled: false, name: "Instagram",  description: "Fotos ansehen",     url: "https://instagram.com/DEIN_NAME",          icon: "instagram" },
     { enabled: false, name: "TikTok",     description: "Clips ansehen",     url: "https://tiktok.com/@DEIN_NAME",            icon: "tiktok" }
   ]
