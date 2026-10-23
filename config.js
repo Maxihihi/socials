@@ -8,6 +8,11 @@ const CONFIG = {
   bio: "Minecraft / Plugins / socials",
   footer: "@2026 maxihihi",
 
+  // ---------- Favicon (Symbol im Browser-Tab) ----------
+  // source: "discord" = dein Discord-Bild, "custom" = immer die Datei bei "custom"
+  // Die Datei "favicon.png" muss im selben Ordner liegen (dient auch als Ersatz).
+  favicon: { source: "discord", custom: "favicon.png" },
+
   // ---------- Discord-Status (Lanyard) ----------
   discordId: "1479924807167508661",   // Zahlen-ID deines Discord-Accounts
   lanyard: {
@@ -50,14 +55,14 @@ const CONFIG = {
   // iconUrl: optional, eigenes Logo (überschreibt "icon")
   // Reihenfolge hier = Reihenfolge auf der Seite
   socials: [
-    { enabled: true,  name: "Twitch",     description: "Streams ansehen",   url: "https://twitch.tv/maxihihi2402",              icon: "twitch" },
-    { enabled: true,  name: "YouTube",    description: "Videos ansehen",    url: "https://youtube.com/@maxi-hihi",          icon: "youtube" },
-    { enabled: true,  name: "Discord",    description: "Server beitreten",  url: "https://discord.gg/xpDmz6KWqx",           icon: "discord" },
-    { enabled: true,  name: "Cat-Craft",  description: "Community-Server",  url: "https://dsc.gg/cat-craft",                 icon: "discord" },
-    { enabled: true,  name: "WhatsApp",   description: "Channel folgen",    url: "https://whatsapp.com/channel/0029Vb8oEGsK0IBhPS21Yu1L", icon: "whatsapp" },
-    { enabled: true,  name: "GitHub",     description: "Projekte ansehen",  url: "https://github.com/maxihihi",              icon: "github" },
-    { enabled: true,  name: "SoundCloud", description: "Musik anhören",     url: "https://soundcloud.com/maxihihi",         icon: "soundcloud" },
-    { enabled: false, name: "Instagram",  description: "Fotos ansehen",     url: "https://instagram.com/DEIN_NAME",          icon: "instagram" },
-    { enabled: false, name: "TikTok",     description: "Clips ansehen",     url: "https://tiktok.com/@DEIN_NAME",            icon: "tiktok" }
+    { enabled: true,  name: "Twitch",     description: "Streams ansehen",   url: "https://twitch.tv/maxihihi2402",                         icon: "twitch" },
+    { enabled: true,  name: "YouTube",    description: "Videos ansehen",    url: "https://youtube.com/@maxi-hihi",                         icon: "youtube" },
+    { enabled: true,  name: "Discord",    description: "Server beitreten",  url: "https://discord.gg/xpDmz6KWqx",                          icon: "discord" },
+    { enabled: true,  name: "Cat-Craft",  description: "Community-Server",  url: "https://dsc.gg/cat-craft",                               icon: "discord" },
+    { enabled: true,  name: "WhatsApp",   description: "Channel folgen",    url: "https://whatsapp.com/channel/0029Vb8oEGsK0IBhPS21Yu1L",  icon: "whatsapp" },
+    { enabled: true,  name: "GitHub",     description: "Projekte ansehen",  url: "https://github.com/maxihihi",                            icon: "github" },
+    { enabled: true,  name: "SoundCloud", description: "Musik anhören",     url: "https://soundcloud.com/maxihihi",                        icon: "soundcloud" },
+    { enabled: false, name: "Instagram",  description: "Fotos ansehen",     url: "https://instagram.com/DEIN_NAME",                        icon: "instagram" },
+    { enabled: false, name: "TikTok",     description: "Clips ansehen",     url: "https://tiktok.com/@DEIN_NAME",                          icon: "tiktok" }
   ]
 };
