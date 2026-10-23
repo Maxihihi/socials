@@ -46,7 +46,7 @@
   }
 
   /* ---------- Favicon ---------- */
-    function setFavicon(url) {
+  function setFavicon(url) {
     if (!url) return;
     var old = document.querySelectorAll('link[rel~="icon"]');
     if (old.length && old[0].getAttribute("href") === url) return;
