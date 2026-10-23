@@ -45,6 +45,18 @@
     document.head.appendChild(link);
   }
 
+  /* ---------- Favicon ---------- */
+  function setFavicon(url) {
+    if (!url) return;
+    var link = document.querySelector('link[rel~="icon"]');
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    if (link.getAttribute("href") !== url) link.setAttribute("href", url);
+  }
+
   /* ---------- Profil ---------- */
   var img = $("#avatarImg");
   var fb = $("#avatarFallback");
@@ -94,7 +106,7 @@
       var im = document.createElement("img");
       im.alt = "";
       im.loading = "lazy";
-      im.src = s.iconUrl || ("https://cdn.simpleicons.org/" + encodeURIComponent(s.icon || s.name.toLowerCase()) + "/ffffff");
+      im.src = s.iconUrl || ("https://cdn.simpleicons.org/" + encodeURIComponent(s.icon || (s.name || "").toLowerCase()) + "/ffffff");
       im.onerror = function () { im.remove(); ic.textContent = (s.name || "?").charAt(0); };
       ic.appendChild(im);
 
@@ -156,12 +168,16 @@
         if (!j.success) throw new Error("Lanyard: " + (j.error && j.error.message));
         var d = j.data;
         var u = d.discord_user;
+        var dcAvatar = discordAvatar(u);
 
         if ((CONFIG.name || {}).source === "discord") {
           setName(u.global_name || u.username);
         }
         if ((CONFIG.avatar || {}).source === "discord") {
-          setAvatar(discordAvatar(u) || (CONFIG.avatar || {}).custom || "");
+          setAvatar(dcAvatar || (CONFIG.avatar || {}).custom || "");
+        }
+        if ((CONFIG.favicon || {}).source === "discord" && dcAvatar) {
+          setFavicon(dcAvatar);
         }
         showStatus(d);
       })
@@ -202,9 +218,12 @@
       ctx.clearRect(0, 0, w, h);
       for (var i = 0; i < ps.length; i++) {
         var p = ps[i];
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
-        if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h;
+        if (p.y > h) p.y = 0;
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
@@ -270,6 +289,7 @@
 
     setName((CONFIG.name || {}).custom || "maxihihi");
     setAvatar((CONFIG.avatar || {}).custom || "");
+    setFavicon((CONFIG.favicon || {}).custom || "");
 
     renderSocials();
     interactions();
