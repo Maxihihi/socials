@@ -46,14 +46,16 @@
   }
 
   /* ---------- Favicon ---------- */
-  function setFavicon(url) {
+    function setFavicon(url) {
     if (!url) return;
-    var link = document.querySelector('link[rel~="icon"]');
-    if (!link) {
-      link = document.createElement("link");
-      link.rel = "icon";
-      document.head.appendChild(link);
-    }
+    var old = document.querySelectorAll('link[rel~="icon"]');
+    if (old.length && old[0].getAttribute("href") === url) return;
+    old.forEach(function (l) { l.remove(); });
+    var link = document.createElement("link");
+    link.rel = "icon";
+    link.href = url;
+    document.head.appendChild(link);
+  }
     if (link.getAttribute("href") !== url) link.setAttribute("href", url);
   }
 
