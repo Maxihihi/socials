@@ -37,26 +37,29 @@
     var uniq = names.filter(function (n, i) { return names.indexOf(n) === i; });
     if (!uniq.length) return;
     var q = uniq.map(function (n) {
-      return "family=" + encodeURIComponent(n).replace(/%20/g, "+") + ":wght@400;500;700";
+      return "family=" + encodeURIComponent(n).replace(/%20/g, "+") + "\:wght\@400;500;700";
     }).join("&");
     var link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://fonts.googleapis.com/css2?" + q + "&display=swap";
+    link.href = "[https://fonts.googleapis.com/css2](https://fonts.googleapis.com/css2)?" + q + "&display=swap";
     document.head.appendChild(link);
   }
 
   /* ---------- Favicon ---------- */
   function setFavicon(url) {
     if (!url) return;
+
     var old = document.querySelectorAll('link[rel~="icon"]');
-    if (old.length && old[0].getAttribute("href") === url) return;
-    old.forEach(function (l) { l.remove(); });
-    var link = document.createElement("link");
-    link.rel = "icon";
-    link.href = url;
-    document.head.appendChild(link);
-  }
-    if (link.getAttribute("href") !== url) link.setAttribute("href", url);
+    var link = old.length ? old[0] : document.createElement("link");
+
+    if (link.getAttribute("href") !== url) {
+      link.rel = "icon";
+      link.href = url;
+
+      if (!link.parentNode) {
+        document.head.appendChild(link);
+      }
+    }
   }
 
   /* ---------- Profil ---------- */
@@ -83,7 +86,7 @@
   function discordAvatar(u) {
     if (!u || !u.avatar) return "";
     var ext = u.avatar.indexOf("a_") === 0 ? "gif" : "png";
-    return "https://cdn.discordapp.com/avatars/" + u.id + "/" + u.avatar + "." + ext + "?size=256";
+    return "[https://cdn.discordapp.com/avatars/](https://cdn.discordapp.com/avatars/)" + u.id + "/" + u.avatar + "." + ext + "?size=256";
   }
 
   /* ---------- Socials ---------- */
@@ -108,7 +111,7 @@
       var im = document.createElement("img");
       im.alt = "";
       im.loading = "lazy";
-      im.src = s.iconUrl || ("https://cdn.simpleicons.org/" + encodeURIComponent(s.icon || (s.name || "").toLowerCase()) + "/ffffff");
+      im.src = s.iconUrl || ("[https://cdn.simpleicons.org/](https://cdn.simpleicons.org/)" + encodeURIComponent(s.icon || (s.name || "").toLowerCase()) + "/ffffff");
       im.onerror = function () { im.remove(); ic.textContent = (s.name || "?").charAt(0); };
       ic.appendChild(im);
 
@@ -164,7 +167,7 @@
     var id = CONFIG.discordId || "";
     if (!L.enabled || !/^\d+$/.test(id)) return;
 
-    fetch("https://api.lanyard.rest/v1/users/" + id, { cache: "no-store" })
+    fetch("[https://api.lanyard.rest/v1/users/](https://api.lanyard.rest/v1/users/)" + id, { cache: "no-store" })
       .then(function (r) { return r.json(); })
       .then(function (j) {
         if (!j.success) throw new Error("Lanyard: " + (j.error && j.error.message));
