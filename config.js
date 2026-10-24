@@ -5,7 +5,7 @@ const CONFIG = {
   // "custom" ist auch der Ersatz, falls Lanyard nicht erreichbar ist.
   name:   { source: "discord", custom: "maxihihi" },
   avatar: { source: "discord", custom: "" },   // Bild-URL, leer = großes Buchstaben-Icon
-  bio: "Minecraft / Plugins / socials",
+  bio: "Minecraft / Plugins / Socials",
   footer: "@2026 maxihihi",
 
   // ---------- Favicon (Symbol im Browser-Tab) ----------
