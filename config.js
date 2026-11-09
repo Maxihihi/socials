@@ -55,7 +55,7 @@ const CONFIG = {
   // iconUrl: optional, eigenes Logo (überschreibt "icon")
   // Reihenfolge hier = Reihenfolge auf der Seite
   socials: [
-    { enabled: true,  name: "Twitch",     description: "Streams ansehen",   url: "https://twitch.tv/maxihihi2402",                         icon: "twitch" },
+    { enabled: true,  name: "Twitch",     description: "Streams ansehen",   url: "https://twitch.tv/maxihihi",                         icon: "twitch" },
     { enabled: true,  name: "YouTube",    description: "Videos ansehen",    url: "https://youtube.com/@maxi-hihi",                         icon: "youtube" },
     { enabled: true,  name: "Discord",    description: "Server beitreten",  url: "https://discord.gg/xpDmz6KWqx",                          icon: "discord" },
     { enabled: true,  name: "Cat-Craft",  description: "Community-Server",  url: "https://dsc.gg/cat-craft",                               icon: "discord" },
