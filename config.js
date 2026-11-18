@@ -57,7 +57,7 @@ const CONFIG = {
   socials: [
     { enabled: true,  name: "Twitch",     description: "Streams ansehen",   url: "https://twitch.tv/maxihihi",                         icon: "twitch" },
     { enabled: true,  name: "YouTube",    description: "Videos ansehen",    url: "https://youtube.com/@maxi-hihi",                         icon: "youtube" },
-    { enabled: true,  name: "Discord",    description: "Server beitreten",  url: "https://discord.gg/xpDmz6KWqx",                          icon: "discord" },
+    { enabled: true,  name: "Discord",    description: "Server beitreten",  url: "https://discord.gg/jgWxQZ5Xvq",                          icon: "discord" },
     { enabled: true,  name: "Cat-Craft",  description: "Community-Server",  url: "https://dsc.gg/cat-craft",                               icon: "discord" },
     { enabled: true,  name: "WhatsApp",   description: "Channel folgen",    url: "https://whatsapp.com/channel/0029Vb8oEGsK0IBhPS21Yu1L",  icon: "whatsapp" },
     { enabled: true,  name: "GitHub",     description: "Projekte ansehen",  url: "https://github.com/maxihihi",                            icon: "github" },
